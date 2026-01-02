@@ -27,7 +27,7 @@ The Active Directory/Splunk Detection Lab project aimed to design and establish 
 
 *Ref 1: Network Diagram*
 
-<img width="703" height="570" alt="image" src="https://github.com/user-attachments/assets/de38234e-ab0a-45e1-9ea0-a3719244a8fd" />
+<img width="680" height="543" alt="image" src="https://github.com/user-attachments/assets/0e5bc74e-016a-4aeb-a481-1283e35283f4" />
 
 ### 2: Virtual Machine Creation
 
