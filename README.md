@@ -33,7 +33,7 @@ The first step in this project was to design and document the overall lab archit
 
 ### 2: Virtual Machine Creation
 
-Four virtual machines were created to represent each role within the lab environment, allowing for isolation, repeatability, and safe experimentation. All systems were provisioned on the same isolated NAT network as defined in the network diagram to ensure reliable inter host communication while preventing direct exposure to the host network. Static IP addresses were assigned to core infrastructure systems to ensure reliable service availability and simplified troubleshooting. The Windows 10 endpoint was intentionally left on DHCP to reflect typical enterprise workstation behavior and to simulate realistic endpoint conditions during attack and detection scenarios. Due to host system memory constraints, virtual machine resources were intentionally sized to support phased operation as previously mentioned.
+Four virtual machines (VMs) were created to represent each role within the lab environment, allowing for isolation, repeatability, and safe experimentation. All of the VMs were created utilizing VirtualBox which I had already previously installed and enjoy. All systems were provisioned on the same isolated NAT network as defined in the network diagram to ensure reliable inter host communication while preventing direct exposure to the host network. Static IP addresses were assigned to core infrastructure systems to ensure reliable service availability and simplified troubleshooting. The Windows 10 endpoint was intentionally left on DHCP to reflect typical enterprise workstation behavior and to simulate realistic endpoint conditions during attack and detection scenarios. During this step, I first tried using Google's DNS server as my name server (8.8.8.8) but I could only ping IP addresses, not domain names meaning external DNS did not work. I discovered that I needed to use the NAT adapter's virtual router as the name server. Hostnames were changed once each VM was confirmed operational to easily identify each machine. Due to host system memory constraints, virtual machine resources were intentionally sized to support phased operation as previously mentioned.
 
 **Active Directory Domain Controller**
 - Operating System: Windows Server 2022
@@ -52,6 +52,7 @@ Four virtual machines were created to represent each role within the lab environ
 - Role: SIEM and log indexing platform
 - Network: NAT (Static IP)
 - Purpose: Centralized log ingestion, storage, and analysis
+- Additional Details: Changing the network configuration of the Ubuntu server is more of an intensive process and was the first time I had to do something like this. I had to change the /etc/netplan/50-cloud-init.yaml configuration, disabling dhcp and adding a valid nameserver along with a default route to the default gateway.
 
 **Attacker System**
 - Operating System: Kali Linux
@@ -60,6 +61,25 @@ Four virtual machines were created to represent each role within the lab environ
 - Purpose: Generation of authentication abuse and brute-force telemetry
 
 ### 3: Software Installation & Configuration
+
+With the virtual machines provisioned the next phase focused on installing and configuring the core software components required for identity management, telemetry generation, and centralized log analysis. During this step I created a shared folder on my host machine that could be accessed by VMs that included software like Splunk Enterprise installer. To make the shared folder accessible for my Ubuntu server, I needed to install the virtualbox-guest-additions-iso and vboxsf to add the appropriate user the group. I then needed to mount the shared folder onto the directory that was created in the Ubuntu server.
+
+**Splunk Installation**
+- Installed Splunk Enterprise on a Linux based server and configured it as the centralized SIEM platform
+- Created a shared folder on the host system to stage installation media and supporting files for use by virtual machines
+- Installed VirtualBox Guest Additions on the Ubuntu server to enable shared folder support and configured the vboxsf group and user permissions to allow the Splunk service account access to the shared directory
+- Mounted the shared folder to a dedicated directory on the Ubuntu server for installer execution and file management
+
+**Endpoint Telemetry Configuration**
+- Installed Sysmon on both the domain controller and Windows 10 endpoint to capture detailed process, network, and authentication telemetry
+- Applied a the Olaf Sysmon configuration to ensure consistent telemetry across hosts
+- Verified Sysmon event generation locally using Windows Event Viewer prior to forwarding
+
+**Log Forwarding**
+- Installed the Splunk Universal Forwarder on Windows systems
+- Created custom indexes to separate endpoint and authentication telemetry
+- Configured inputs to forward Windows Security, System, Application, and Sysmon event logs
+- Validated successful log forwarding through test events and index searches
 
 ### 4: Configuring Active Directory
 
