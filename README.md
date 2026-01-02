@@ -37,28 +37,28 @@ Four virtual machines (VMs) were created to represent each role within the lab e
 
 **Active Directory Domain Controller**
 - Operating System: Windows Server 2022
-- Role: Active Directory Domain Services (AD DS), DNS
+- Role: Active Directory Domain Services (AD DS)
 - Network: NAT (Static IP)
 - Purpose: Centralized identity management and authentication
 
 **Windows 10 Endpoint**
 - Operating System: Windows 10
-- Role: Domain-joined workstation
+- Role: Domain joined workstation
 - Network: NAT (DHCP)
-- Purpose: Target system for authentication-based attack simulation
+- Purpose: Target system for attack simulation
 
 **Splunk Server**
 - Operating System: Linux (Ubuntu Server)
 - Role: SIEM and log indexing platform
 - Network: NAT (Static IP)
 - Purpose: Centralized log ingestion, storage, and analysis
-- Additional Details: Changing the network configuration of the Ubuntu server is more of an intensive process and was the first time I had to do something like this. I had to change the /etc/netplan/50-cloud-init.yaml configuration, disabling dhcp and adding a valid nameserver along with a default route to the default gateway.
+- Additional Details: Changing the network configuration of the Ubuntu server is more of an intensive process and was the first time I had to do something like this in Ubuntu. I had to change the /etc/netplan/50-cloud-init.yaml configuration, disabling dhcp and adding a valid nameserver along with a default route to the default gateway.
 
 **Attacker System**
 - Operating System: Kali Linux
 - Role: Attack simulation platform
 - Network: NAT (Static IP)
-- Purpose: Generation of authentication abuse and brute-force telemetry
+- Purpose: Generation of attack telemetry
 
 ### 3: Software Installation & Configuration
 
@@ -69,18 +69,37 @@ With the virtual machines provisioned the next phase focused on installing and c
 - Created a shared folder on the host system to stage installation media and supporting files for use by virtual machines
 - Installed VirtualBox Guest Additions on the Ubuntu server to enable shared folder support and configured the vboxsf group and user permissions to allow the Splunk service account access to the shared directory
 - Mounted the shared folder to a dedicated directory on the Ubuntu server for installer execution and file management
+- After confirming Splunk Enterprise is operational, I configured Splunk to start on boot for the splunk user
+- Tested the Splunk server was reachable from the other endpoints within the network by searching the IP of the Splunk server on port 8000
 
 **Endpoint Telemetry Configuration**
 - Installed Sysmon on both the domain controller and Windows 10 endpoint to capture detailed process, network, and authentication telemetry
-- Applied a the Olaf Sysmon configuration to ensure consistent telemetry across hosts
+- Applied the Olaf Hartong Sysmon configuration to ensure consistent telemetry across hosts
 - Verified Sysmon event generation locally using Windows Event Viewer prior to forwarding
 
 **Log Forwarding**
 - Installed the Splunk Universal Forwarder on Windows systems
+- Configured inputs to forward Windows Security, System, Application, and Sysmon event logs using inputs.conf
+- Changed log on as from NT Service to local system account due to limitations with log collecting
+- Restarted universal forwarder service and validated successful log forwarding through test events and index searches
 - Created custom indexes to separate endpoint and authentication telemetry
-- Configured inputs to forward Windows Security, System, Application, and Sysmon event logs
-- Validated successful log forwarding through test events and index searches
+- Validated logs were being forwarded using Splunk's Search and Reporting App
 
 ### 4: Configuring Active Directory
+
+This step involved installing and configuring Active Directory to establish a functional domain environment for authentication and telemetry collection. The Windows Server VM was prepared with the Active Directory Domain Services (AD DS) role, promoted to a domain controller, and configured with users, groups, and security policies. The Windows 10 endpoint was then joined to the domain to ensure that authentication events would be generated in a realistic enterprise environment.
+
+**Active Directory Installation & Domain Controller Promotion**
+- Installed Active Directory Domain Services (AD DS) on the Windows Server system
+- Promoted the server to a domain controller and created a new Active Directory domain
+
+**User & Group Configuration**
+- Configured domain users and groups to represent typical enterprise roles
+- Applied password policies to simulate realistic authentication constraints
+
+**Joining the Windows 10 Endpoint**
+- Needed to change this endpoints DNS server to the DCs IP address
+- Configured the Windows 10 VM as a domain joined workstation
+- Verified connectivity to the domain controller and successful Kerberos authentication
 
 ### 5: Telemetry Generation and Analysis
