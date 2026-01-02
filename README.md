@@ -6,20 +6,20 @@ The Active Directory/Splunk Detection Lab project aimed to design and establish 
 
 ### Skills Learned
 
-- Advanced understanding of SIEM deployment, concepts and practical application.
-- Virtualized network design and resource optimization.
-- Proficiency in analyzing and interpreting logs.
-- Ability to generate and recognize attack signatures and patterns.
-- Development of critical thinking and problem solving skills in cybersecurity.
+- Advanced understanding of SIEM deployment, concepts and practical application
+- Virtualized network design and resource optimization
+- Proficiency in analyzing and interpreting logs
+- Ability to generate and recognize attack signatures and patterns
+- Development of critical thinking and problem solving skills in cybersecurity
 
 ### Tools Used
 
-- **VirtualBox:** Virtualization platform used to host and manage lab virtual machines.
-- **Windows Server 2022 Active Directory Domain Services:** Centralized identity management and authentication infrastructure.
-- **Windows 10:** Domain joined endpoint used to simulate user activity and attack targets.
-- **Kali Linux:** Attack simulation platform for telemetry generation to create realistic logging and attack scenarios.
+- **VirtualBox:** Virtualization platform used to host and manage lab virtual machines
+- **Windows Server 2022 Active Directory Domain Services:** Centralized identity management and authentication infrastructure
+- **Windows 10:** Domain joined endpoint used to simulate user activity and attack targets
+- **Kali Linux:** Attack simulation platform for telemetry generation to create realistic logging and attack scenarios
 - **Ubuntu Splunk Enterprise Server:** SIEM platform used to ingest, index, and analyze Windows security telemetry
-- **Splunk Universal Forwarder:** Log collection agent configured on Windows systems to forward Security, System, Application, and Sysmon logs.
+- **Splunk Universal Forwarder:** Log collection agent configured on Windows systems to forward Security, System, Application, and Sysmon logs
 
 ## Steps
 
@@ -33,7 +33,7 @@ The first step in this project was to design and document the overall lab archit
 
 ### 2: Virtual Machine Creation
 
-Four virtual machines were created to represent each role within the lab environment, allowing for isolation, repeatability, and safe experimentation. All systems were provisioned on the same isolated NAT network as defined in the network diagram to ensure reliable inter host communication while preventing direct exposure to the host network. Due to host system memory constraints, virtual machine resources were intentionally sized to support phased operation as previously mentioned.
+Four virtual machines were created to represent each role within the lab environment, allowing for isolation, repeatability, and safe experimentation. All systems were provisioned on the same isolated NAT network as defined in the network diagram to ensure reliable inter host communication while preventing direct exposure to the host network. Static IP addresses were assigned to core infrastructure systems to ensure reliable service availability and simplified troubleshooting. The Windows 10 endpoint was intentionally left on DHCP to reflect typical enterprise workstation behavior and to simulate realistic endpoint conditions during attack and detection scenarios. Due to host system memory constraints, virtual machine resources were intentionally sized to support phased operation as previously mentioned.
 
 **Active Directory Domain Controller**
 - Operating System: Windows Server 2022
@@ -54,14 +54,10 @@ Four virtual machines were created to represent each role within the lab environ
 - Purpose: Centralized log ingestion, storage, and analysis
 
 **Attacker System**
-
-Operating System: Kali Linux
-
-Role: Attack simulation platform
-
-Network: NAT (Static IP)
-
-Purpose: Generation of authentication abuse and brute-force telemetry
+- Operating System: Kali Linux
+- Role: Attack simulation platform
+- Network: NAT (Static IP)
+- Purpose: Generation of authentication abuse and brute-force telemetry
 
 ### 3: Software Installation & Configuration
 
