@@ -103,3 +103,19 @@ This step involved installing and configuring Active Directory to establish a fu
 - Verified connectivity to the domain controller and successful Kerberos authentication
 
 ### 5: Telemetry Generation and Analysis
+
+The final phase of the project focused on generating attack telemetry and analyzing the resulting events across the Windows endpoints, Active Directory domain controller, and the Splunk SIEM. Credential abuse techniques were executed in a controlled manner to simulate real world attack behavior, and the resulting logs were reviewed to understand how such activity manifests in enterprise security telemetry.
+
+**Attack Simulation**
+- Conducted credential brute force attacks against the domain joined Windows 10 endpoint from the Kali Linux attacker system to generate multiple failed authentication attempts followed by successful authentication events
+- Simulated password spraying behavior by attempting authentication across multiple domain accounts using common credentials, generating distributed authentication failures
+- Generated account lockout events through repeated failed authentication attempts to validate policy enforcement and detection visibility
+- Ensured attacks were executed only within the isolated lab environment
+
+**SIEM Analysis**
+- Verified that forwarded logs were successfully indexed in Splunk Enterprise
+- Queried custom indexes to isolate authentication and endpoint telemetry
+- Correlated failed and successful logon events with source hosts, usernames, and timestamps
+- Identified characteristics of brute force activity, including high-frequency failed logons from a single source host
+- Observed password spraying behavior through low frequency authentication failures distributed across multiple user accounts
+- Correlated account lockout events with preceding failed authentication attempts to validate security policy enforcement
