@@ -25,7 +25,9 @@ The Active Directory/Splunk Detection Lab project aimed to design and establish 
 
 ### 1: Create Network Diagram
 
-The first step in this project was to design and document the overall lab architecture using a network diagram. This diagram was created to clearly illustrate system roles and data flows between the attacker, endpoint, domain controller, and SIEM components prior to implementation. All IP addresses shown in the diagram use non routable documentation ranges (RFC 5737) rather than real infrastructure addresses. The architecture was designed to operate in phases to accommodate host resource constraints while maintaining a realistic Active Directory environment and SIEM ingestion behavior.
+_Note: IP addresses shown in diagrams and documentation use RFC 5737 documentation ranges and are representative only. The actual lab environment uses private RFC1918 addressing._
+
+The first step in this project was to design and document the overall lab architecture using a network diagram. This diagram was created to clearly illustrate system roles and data flows between the attacker, endpoint, domain controller, and SIEM components prior to implementation. The architecture was designed to operate in phases to accommodate host resource constraints while maintaining a realistic Active Directory environment and SIEM ingestion behavior.
 
 *Ref 1: Network Diagram*
 
